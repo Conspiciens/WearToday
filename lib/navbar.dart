@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:weather_project/home.dart';
+import 'package:weather_project/weatherSummary.dart';
 
 
 class NavigationBarWidget extends StatefulWidget {
@@ -11,6 +13,9 @@ class NavigationBarWidget extends StatefulWidget {
 class _NavigationBarState extends State<NavigationBarWidget> {
   int pageCurrentIndex = 0; 
   NavigationDestinationLabelBehavior labelBehavior = NavigationDestinationLabelBehavior.alwaysShow; 
+  final List<Widget> _children = [
+    HomeWidget()
+  ];  
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +35,8 @@ class _NavigationBarState extends State<NavigationBarWidget> {
             icon: Icon(Icons.bookmark), 
             label: 'Wardrobe')
         ] 
-      )
+      ),
+      body: _children[pageCurrentIndex]
     ); 
   }
 }

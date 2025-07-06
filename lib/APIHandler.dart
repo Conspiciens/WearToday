@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 Future<Weather> fetchWeather() async {
   final apiKey = dotenv.maybeGet('WEATHER_API_KEY', fallback: null);
 
-  if (apiKey == null) throw Error(); 
+  if (apiKey == null) throw Exception('Failed to get API key'); 
 
   final response = await http.get(
     Uri.parse('https://weather.googleapis.com/v1/forecast/days:lookup?key=$apiKey&location.latitude=37.4220&location.longitude=-122.0841&days=2')
@@ -24,7 +24,7 @@ Future<Weather> fetchWeather() async {
 
 class Weather {
 
-  final int relativeHumidity; 
+  final int relativeHumidity;
   final int uvIndex; 
   final int wind; 
 
@@ -45,7 +45,8 @@ class Weather {
   const Weather({
     required this.relativeHumidity, 
     required this.uvIndex, 
-    required this.wind }); 
+    required this.wind
+     }); 
     /* required this.windSpeed, 
     required this.windGust, 
     required this.cloudCover, 
@@ -57,11 +58,14 @@ class Weather {
     required this.weatherCondition }); */
 
   factory Weather.fromJson(Map<String, dynamic> json) {
-    return switch (json) {
-      {'relativeHumdity': int relativeHumditiy, 
+    print(json['forecastDays'][0]['daytimeForecast']);
+    return switch (json['forecastDays'][0]['daytimeForecast']) {
+      {'relativeHumidity': int relativeHumidity, 
        'uvIndex': int uvIndex,
-       'wind': int wind, 
-      } => Weather(relativeHumidity: relativeHumditiy, uvIndex: uvIndex, wind: wind), 
+       'wind': {
+        'speed': {'value': int wind} 
+       }, 
+      } => Weather(relativeHumidity: relativeHumidity, uvIndex: uvIndex, wind: wind), 
       _ => throw const FormatException('Failed to load Weather from API'),
     }; 
   }
